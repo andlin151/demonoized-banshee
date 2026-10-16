@@ -1,0 +1,27 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- C# 14 turns identifiers named "field" inside properties into a keyword --><LangVersion>12</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)\</OutputPath>
+    <!-- Legacy code base: keep the noise down while porting -->
+    <NoWarn>$(NoWarn);CS0618;CS0612;CS0169;CS0414;CS0649;CS0067;CS0108;CS0114;SYSLIB0014;SYSLIB0011</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GtkSharpVersion>3.24.24.95</GtkSharpVersion>
+    <MonoPosixVersion>7.1.0-final.1.21458.1</MonoPosixVersion>
+  </PropertyGroup>
+  <!-- dotnet test -p:EnableTests=true -->
+  <PropertyGroup Condition="'$(EnableTests)' == 'true'">
+    <DefineConstants>$(DefineConstants);ENABLE_TESTS</DefineConstants>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(EnableTests)' == 'true'">
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+  </ItemGroup>
+</Project>

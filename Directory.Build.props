@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- C# 14 turns identifiers named "field" inside properties into a keyword -->
+    <LangVersion>12</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Sources and resources are listed explicitly, mirroring each Makefile.am -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <!-- Everything lands in a single directory, as the autotools build did -->
+    <OutputPath>$(MSBuildThisFileDirectory)bin\</OutputPath>
+    <NoWarn>$(NoWarn);CS0618;CS0612;CS0169;CS0414;CS0649;CS0067;CS0108;CS0114;CS0109;CS0162;CS0168;CS0219;CS1717;SYSLIB0014;SYSLIB0011;SYSLIB0013;SYSLIB0006</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <HyenaDir>$(MSBuildThisFileDirectory)deps\hyena\</HyenaDir>
+    <DBusSharpDir>$(MSBuildThisFileDirectory)deps\dbus-sharp\</DBusSharpDir>
+    <DBusSharpGlibDir>$(MSBuildThisFileDirectory)deps\dbus-sharp-glib\</DBusSharpGlibDir>
+    <GtkSharpVersion>3.24.24.95</GtkSharpVersion>
+    <MonoPosixVersion>7.1.0-final.1.21458.1</MonoPosixVersion>
+  </PropertyGroup>
+</Project>

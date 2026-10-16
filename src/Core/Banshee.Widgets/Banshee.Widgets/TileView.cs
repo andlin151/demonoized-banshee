@@ -93,8 +93,8 @@ namespace Banshee.Widgets
                 Gdk.Rectangle child_allocation;
                 child_allocation.X = 0;
                 child_allocation.Y = 0;
-                child_allocation.Width = Math.Max(allocation.Width, child.Requisition.Width);
-                child_allocation.Height = Math.Max(allocation.Height, child.Requisition.Height);
+                child_allocation.Width = Math.Max(allocation.Width, child.ChildRequisition.Width);
+                child_allocation.Height = Math.Max(allocation.Height, child.ChildRequisition.Height);
 
                 child.SizeAllocate(child_allocation);
                 SetSize((uint)child_allocation.Width, (uint)child_allocation.Height);
@@ -102,7 +102,7 @@ namespace Banshee.Widgets
             }
 
             Table first_table = cached_tables[0];
-            int usable_area = allocation.Width - (child.Requisition.Width - first_table.Requisition.Width);
+            int usable_area = allocation.Width - (child.ChildRequisition.Width - first_table.ChildRequisition.Width);
             int new_column_count = RelayoutTablesIfNeeded(usable_area, current_column_count);
 
             if(current_column_count != new_column_count) {

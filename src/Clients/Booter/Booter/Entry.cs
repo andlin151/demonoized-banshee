@@ -51,6 +51,7 @@
 //
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
@@ -105,8 +106,19 @@ namespace Booter
 
         private static void BootClient (string clientName)
         {
-            AppDomain.CurrentDomain.ExecuteAssembly (Path.Combine (Path.GetDirectoryName (
-                Assembly.GetEntryAssembly ().Location), String.Format ("{0}.exe", clientName)));
+            // AppDomain.ExecuteAssembly is not available on .NET Core and later, so load
+            // the client assembly into this process and call its entry point directly.
+            var client = Assembly.LoadFrom (Path.Combine (Path.GetDirectoryName (
+                Assembly.GetEntryAssembly ().Location), String.Format ("{0}.dll", clientName)));
+            var entry_point = client.EntryPoint;
+            var args = entry_point.GetParameters ().Length == 0
+                ? null
+                : new object [] { Environment.GetCommandLineArgs ().Skip (1).ToArray () };
+            try {
+                entry_point.Invoke (null, args);
+            } catch (TargetInvocationException e) {
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture (e.InnerException).Throw ();
+            }
         }
 
         private const string LibGdkLibrary = "libgdk-win32-2.0-0.dll";

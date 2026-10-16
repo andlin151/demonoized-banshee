@@ -1,0 +1,6 @@
+<Project>
+  <!-- mcs embedded resources under their bare file name (-resource:path,name) -->
+  <ItemGroup>
+    <EmbeddedResource Update="@(EmbeddedResource)" LogicalName="%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

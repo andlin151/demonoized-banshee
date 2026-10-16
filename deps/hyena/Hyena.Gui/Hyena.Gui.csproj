@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Hyena.Gui</AssemblyName>
+    <RootNamespace>Hyena.Gui</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Hyena/Hyena.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="GtkSharp" Version="$(GtkSharpVersion)" />
+  </ItemGroup>
+</Project>

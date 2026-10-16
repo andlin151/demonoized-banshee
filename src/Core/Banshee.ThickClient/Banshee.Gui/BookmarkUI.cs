@@ -40,6 +40,8 @@ using Banshee.Collection.Database;
 using Banshee.MediaEngine;
 using Banshee.ServiceStack;
 
+using Bookmark = Banshee.Collection.Database.Bookmark;
+
 namespace Banshee.Gui
 {
     public class BookmarkUI

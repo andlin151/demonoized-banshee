@@ -54,6 +54,8 @@ using Banshee.Widgets;
 using Banshee.Collection.Gui;
 using Banshee.Sources.Gui;
 
+using SearchEntry = Banshee.Widgets.SearchEntry;
+
 namespace Nereid
 {
     public class PlayerInterface : BaseClientWindow, IClientWindow, IDBusObjectName, IService, IDisposable, IHasSourceView

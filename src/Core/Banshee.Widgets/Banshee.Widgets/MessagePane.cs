@@ -148,7 +148,7 @@ namespace Banshee.Widgets
         {
             base.OnSizeAllocated (allocation);
 
-            Requisition tableReq = Requisition;
+            Requisition tableReq = ChildRequisition;
             allocation.X += Math.Max ((allocation.Width - tableReq.Width) / 2, 0);
             allocation.Y += Math.Max ((int)((allocation.Height - tableReq.Height) * 0.35), 0);
             allocation.Width = tableReq.Width;

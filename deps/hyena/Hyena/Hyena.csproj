@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Hyena</AssemblyName>
+    <RootNamespace>Hyena</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Hyena.SExpEngine/tests/**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="GLibSharp" Version="$(GtkSharpVersion)" />
+    <PackageReference Include="Mono.Posix" Version="$(MonoPosixVersion)" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,4 @@
+<Project>
+  <!-- Bundled third-party libraries keep their own build settings:
+       stop MSBuild from applying Banshee's Directory.Build.* files here. -->
+</Project>

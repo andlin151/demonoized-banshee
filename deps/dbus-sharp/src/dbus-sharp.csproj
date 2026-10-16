@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>dbus-sharp</AssemblyName>
+    <RootNamespace>DBus</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoWarn>$(NoWarn);CS0618;CS0612;CS0169;CS0414;CS0649;CS0067;SYSLIB0050;SYSLIB0051</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Not part of the library build (bus daemon implementation) -->
+    <Compile Remove="Daemon.cs;Server.cs;ServerBus.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" />
+  </ItemGroup>
+</Project>

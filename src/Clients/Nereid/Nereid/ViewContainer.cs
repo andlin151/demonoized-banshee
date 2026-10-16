@@ -32,6 +32,8 @@ using Gtk;
 using Mono.Unix;
 
 using Banshee.Widgets;
+
+using SearchEntry = Banshee.Widgets.SearchEntry;
 using Banshee.Gui.Widgets;
 using Banshee.Sources.Gui;
 using Banshee.Collection;

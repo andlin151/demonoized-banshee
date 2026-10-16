@@ -31,6 +31,8 @@ using Gtk;
 
 using Hyena.Widgets;
 
+using MenuButton = Hyena.Widgets.MenuButton;
+
 using Banshee.ServiceStack;
 
 namespace Banshee.Gui.Widgets
