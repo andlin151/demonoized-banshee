@@ -57,6 +57,7 @@ using Banshee.Sources;
 using Banshee.Widgets;
 
 using IA=InternetArchive;
+using SearchEntry = Banshee.Widgets.SearchEntry;
 
 namespace Banshee.InternetArchive
 {

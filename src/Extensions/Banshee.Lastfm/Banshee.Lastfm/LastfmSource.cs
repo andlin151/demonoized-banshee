@@ -117,7 +117,7 @@ namespace Banshee.Lastfm
 
             if (FirstRunSchema.Get ()) {
                 var streaming_addin = AddinManager.Registry.GetAddins ()
-                    .Single (a => a.LocalId.Equals ("Banshee.LastfmStreaming"));
+                    .SingleOrDefault (a => a.LocalId.Equals ("Banshee.LastfmStreaming"));
                 if (streaming_addin != null) {
                     streaming_addin.Enabled = Account.Subscriber;
                 }

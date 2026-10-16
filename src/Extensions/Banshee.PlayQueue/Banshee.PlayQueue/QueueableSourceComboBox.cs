@@ -71,7 +71,7 @@ namespace Banshee.PlayQueue
         private void HandleQueryTooltip (object o, QueryTooltipArgs args)
         {
             var source = Source;
-            if (source != null && Child.Allocation.Width < Child.Requisition.Width) {
+            if (source != null && Child.Allocation.Width < Child.ChildRequisition.Width) {
                 args.Tooltip.Text = source.Name;
                 args.RetVal = true;
             }

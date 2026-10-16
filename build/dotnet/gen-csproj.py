@@ -20,6 +20,15 @@ CORE = p('Core/Banshee.Core/Banshee.Core.csproj')
 SERVICES = p('Core/Banshee.Services/Banshee.Services.csproj')
 WIDGETS = p('Core/Banshee.Widgets/Banshee.Widgets.csproj')
 THICKCLIENT = p('Core/Banshee.ThickClient/Banshee.ThickClient.csproj')
+LASTFM_GUI = p('Libraries/Lastfm.Gui/Lastfm.Gui.csproj')
+MIGO = p('Libraries/Migo/Migo.csproj')
+
+# LINK_BANSHEE_THICKCLIENT_DEPS in build/build.environment.mk
+THICK_REFS = [THICKCLIENT, SERVICES, CORE, WIDGETS, HYENA, HYENA_SQLITE, HYENA_GUI, DBUS, DBUS_GLIB]
+THICK_PKGS = ['posix', 'gtk', 'addins', 'taglib']
+
+def extension(name, refs=(), pkgs=()):
+    return ('src/Extensions/' + name, 'Library', False, [], THICK_REFS + list(refs), THICK_PKGS + list(pkgs))
 
 PKG = {
     'gtk': ('GtkSharp', '$(GtkSharpVersion)'),
@@ -47,6 +56,27 @@ PROJECTS = [
     ('src/Backends/Banshee.Gio', 'Library', False, [], [CORE, SERVICES, HYENA], ['posix', 'gtk', 'taglib', 'addins']),
     ('src/Clients/Nereid', 'WinExe', False, [], [THICKCLIENT, SERVICES, CORE, WIDGETS, HYENA, HYENA_SQLITE, HYENA_GUI], ['posix', 'gtk', 'addins']),
     ('src/Clients/Booter', 'Exe', False, [], [SERVICES, CORE, HYENA, HYENA_SQLITE, DBUS], ['posix', 'glib', 'addins']),
+
+    ('src/Libraries/Lastfm.Gui', 'Library', False, [], [LASTFM, MONO_MEDIA, HYENA, HYENA_SQLITE], ['posix', 'gtk']),
+    ('src/Libraries/Migo', 'Library', False, [], [HYENA, HYENA_SQLITE], ['posix', 'glib', 'zip']),
+
+    # Extensions that only need the core (see README for the ones left out and why)
+    extension('Banshee.Audiobook'),
+    extension('Banshee.Bpm'),
+    extension('Banshee.CoverArt'),
+    extension('Banshee.FileSystemQueue'),
+    extension('Banshee.Fixup'),
+    extension('Banshee.InternetArchive'),
+    extension('Banshee.InternetRadio'),
+    extension('Banshee.Lastfm', [MONO_MEDIA, LASTFM, LASTFM_GUI]),
+    extension('Banshee.LibraryWatcher'),
+    extension('Banshee.MiniMode'),
+    extension('Banshee.Mpris'),
+    extension('Banshee.NowPlaying'),
+    extension('Banshee.PlayerMigration'),
+    extension('Banshee.PlayQueue'),
+    extension('Banshee.Podcasting', [MIGO], ['zip']),
+    extension('Banshee.SqlDebugConsole'),
 ]
 
 def makefile_list(text, var):

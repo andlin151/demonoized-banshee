@@ -59,6 +59,8 @@ using Banshee.Sources;
 using Hyena.Gui.Theming;
 using Banshee.Query;
 
+using Bookmark = Banshee.Collection.Database.Bookmark;
+
 namespace Banshee.Audiobook
 {
     public class BookView : Hyena.Widgets.RoundedFrame, Banshee.Sources.Gui.ISourceContents, IDisposable

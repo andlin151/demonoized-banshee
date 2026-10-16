@@ -91,53 +91,75 @@ namespace Banshee.Collection.Database
             LoadOrCreate ();
         }
 
+        private const string ShuffleModesPath = "/Banshee/PlaybackController/ShuffleModes";
+
         private Shuffler ()
         {
             random_modes = new List<RandomBy> ();
-            AddinManager.AddExtensionNodeHandler ("/Banshee/PlaybackController/ShuffleModes", OnExtensionChanged);
+            AddinManager.AddExtensionNodeHandler (ShuffleModesPath, OnExtensionChanged);
+
+            // Mono.Addins >= 1.4 defers the initial Add notifications when the handler is
+            // registered from inside another extension event (e.g. a source created by the
+            // SourceManager), so load the already registered modes right away.
+            foreach (TypeExtensionNode node in AddinManager.GetExtensionNodes (ShuffleModesPath)) {
+                AddRandomMode (node);
+            }
         }
 
         private void OnExtensionChanged (object o, ExtensionNodeEventArgs args)
         {
             var tnode = (TypeExtensionNode)args.ExtensionNode;
-            RandomBy random_by = null;
 
             if (args.Change == ExtensionChange.Add) {
-                lock (random_modes) {
-                    try {
-                        random_by = (RandomBy) tnode.CreateInstance ();
-                        random_by.SetShuffler (this);
-                        random_modes.Add (random_by);
-                        node_map[tnode] = random_by;
-                    } catch (Exception e) {
-                        Log.Error (String.Format ("Failed to load RandomBy extension: {0}", args.Path), e);
-                    }
+                AddRandomMode (tnode);
+                return;
+            }
+
+            RandomBy random_by = null;
+            lock (random_modes) {
+                if (node_map.ContainsKey (tnode)) {
+                    random_by = node_map[tnode];
+                    node_map.Remove (tnode);
+                    random_modes.Remove (random_by);
+                }
+            }
+
+            if (random_by != null) {
+                Log.DebugFormat ("Removed mode from {0} shuffler: {1}", this.Id, random_by.Id);
+                var handler = RandomModeRemoved;
+                if (handler != null) {
+                    handler (random_by);
+                }
+            }
+        }
+
+        private void AddRandomMode (TypeExtensionNode tnode)
+        {
+            RandomBy random_by = null;
+
+            lock (random_modes) {
+                if (node_map.ContainsKey (tnode)) {
+                    // Already loaded when the shuffler was created
+                    return;
                 }
 
-                if (random_by != null) {
-                    if (!random_by.GetType ().AssemblyQualifiedName.Contains ("Banshee.Service")) {
-                        Log.DebugFormat ("Loaded new mode into {0} shuffler: {1}", this.Id, random_by.Id);
-                    }
-                    var handler = RandomModeAdded;
-                    if (handler != null) {
-                        handler (random_by);
-                    }
+                try {
+                    random_by = (RandomBy) tnode.CreateInstance ();
+                    random_by.SetShuffler (this);
+                    random_modes.Add (random_by);
+                    node_map[tnode] = random_by;
+                } catch (Exception e) {
+                    Log.Error (String.Format ("Failed to load RandomBy extension: {0}", tnode.Path), e);
                 }
-            } else {
-                lock (random_modes) {
-                    if (node_map.ContainsKey (tnode)) {
-                        random_by = node_map[tnode];
-                        node_map.Remove (tnode);
-                        random_modes.Remove (random_by);
-                    }
-                }
+            }
 
-                if (random_by != null) {
-                    Log.DebugFormat ("Removed mode from {0} shuffler: {1}", this.Id, random_by.Id);
-                    var handler = RandomModeRemoved;
-                    if (handler != null) {
-                        handler (random_by);
-                    }
+            if (random_by != null) {
+                if (!random_by.GetType ().AssemblyQualifiedName.Contains ("Banshee.Service")) {
+                    Log.DebugFormat ("Loaded new mode into {0} shuffler: {1}", this.Id, random_by.Id);
+                }
+                var handler = RandomModeAdded;
+                if (handler != null) {
+                    handler (random_by);
                 }
             }
         }

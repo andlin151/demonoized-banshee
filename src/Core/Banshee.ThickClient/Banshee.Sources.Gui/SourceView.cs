@@ -508,7 +508,10 @@ namespace Banshee.Sources.Gui
                 }
             }
 
-            ExpanderColumn = Columns[0];
+            // The columns are already gone while sources are removed on shutdown
+            if (Columns.Length > 0) {
+                ExpanderColumn = Columns[0];
+            }
             return false;
         }
 

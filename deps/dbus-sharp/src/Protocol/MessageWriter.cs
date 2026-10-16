@@ -355,14 +355,11 @@ namespace DBus.Protocol
 				return;
 			}
 
-			Type type = val.GetType ();
-			
-			// TODO: workaround issue with array being written as variant
-			// See PR for context: https://github.com/mono/dbus-sharp/pull/58
-			if (type.IsArray)
-				Write (type, val);
-			else
-				WriteVariant (type, val);
+			// Arrays must be written as variants too (signature + value), as dbus-sharp 0.8.1
+			// did. The "workaround" from https://github.com/mono/dbus-sharp/pull/58 wrote
+			// them without a signature, producing invalid messages (e.g. MPRIS metadata
+			// with string lists), which makes the bus drop the connection.
+			WriteVariant (val.GetType (), val);
 		}
 
 		public void WriteVariant (Type type, object val)

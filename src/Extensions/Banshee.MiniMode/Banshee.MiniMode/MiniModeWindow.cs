@@ -46,6 +46,8 @@ using Banshee.ServiceStack;
 using Banshee.Widgets;
 using Banshee.Configuration;
 
+using MenuButton = Hyena.Widgets.MenuButton;
+
 namespace Banshee.MiniMode
 {
     public class MiniMode : Banshee.Gui.BaseClientWindow
