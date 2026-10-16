@@ -347,13 +347,6 @@ _bp_pipeline_construct (BansheePlayer *player)
     player->volume = gst_element_factory_make ("volume", NULL);
     g_return_val_if_fail (player->volume != NULL, FALSE);
 
-// gstreamer on OS X does not call the callback upon initialization (see bgo#680917)
-#ifdef __APPLE__
-    // call the volume changed callback once so the volume from the pipeline is
-    // set in the player object
-    bp_volume_changed_callback (player->playbin, NULL, player);
-#endif
-
     audiosinkqueue = gst_element_factory_make ("queue", "audiosinkqueue");
     g_return_val_if_fail (audiosinkqueue != NULL, FALSE);
 
@@ -395,6 +388,12 @@ _bp_pipeline_construct (BansheePlayer *player)
 
     // Now that our internal audio sink is constructed, tell playbin to use it
     g_object_set (G_OBJECT (player->playbin), "audio-sink", player->audiobin, NULL);
+
+    // Read the initial volume from the pipeline so the player object starts with the
+    // real value. GStreamer does not notify it upon initialization on OS X (bgo#680917),
+    // nor with recent GStreamer versions on Linux (PulseAudio/PipeWire sinks), which
+    // left current_volume at 0: the UI showed the player muted while it was audible.
+    bp_volume_changed_callback (player->playbin, NULL, player);
 
     // Connect to the bus to get messages
     bus = gst_pipeline_get_bus (GST_PIPELINE (player->playbin));    

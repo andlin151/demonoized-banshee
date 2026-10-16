@@ -202,9 +202,10 @@ namespace Banshee.GStreamer
 
             is_initialized = true;
 
-            if (!bp_audiosink_has_volume (handle)) {
-                Volume = (ushort)PlayerEngineService.VolumeSchema.Get ();
-            }
+            // Always restore our own volume: the audio sink is wrapped in a bin, so playbin
+            // applies the volume in software and the sound server (PulseAudio/PipeWire)
+            // never remembers it for us, even when the sink has a volume property.
+            Volume = (ushort)PlayerEngineService.VolumeSchema.Get ();
         }
 
         public override void Dispose ()
@@ -656,9 +657,7 @@ namespace Banshee.GStreamer
                 }
 
                 bp_set_volume (handle, value / 100.0);
-                if (!bp_audiosink_has_volume (handle)) {
-                    PlayerEngineService.VolumeSchema.Set ((int)value);
-                }
+                PlayerEngineService.VolumeSchema.Set ((int)value);
 
                 OnEventChanged (PlayerEvent.Volume);
             }
