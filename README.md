@@ -8,8 +8,23 @@ libraries (gtk-sharp, dbus-sharp, Mono.Addins…) and an autotools build. This p
 keeps Banshee's code and history, and replaces the Mono-only pieces so it builds with
 the `dotnet` SDK and runs on the regular .NET runtime.
 
+This port is based on Banshee's development branch (`master` as of December 2019,
+version 2.9.2, 235 commits after the 2.9.1 development release), not on the last
+stable release (2.6.2). The stable series uses GTK 2, which GtkSharp does not support;
+the development branch already moved to GTK 3 and GStreamer 1.0. That GTK 3 port was
+never released as stable, so some interface glitches come from Banshee itself rather
+than from .NET.
+
 > **Status: early work in progress.** The core application builds and starts, but
 > many extensions and features are not ported yet. See [Status](#status).
+
+## Screenshots
+
+Banshee running on .NET 10, playing a local AAC file with embedded cover art.
+
+![Music library with the current track and its cover art](docs/screenshots/library.png)
+
+![Now Playing view](docs/screenshots/now-playing.png)
 
 ## Requirements
 
@@ -63,14 +78,27 @@ Working:
 - SQLite library database, including creation and migration
 - Single-instance handling and remote services over D-Bus
 - Add-in loading through Mono.Addins
+- Extensions: Audiobook, BPM detection, Cover Art, File System Queue, Fixup, Internet
+  Archive, Internet Radio, Last.fm (scrobbling and recommendations), Library Watcher,
+  Mini Mode, MPRIS, Now Playing, Player Migration, Play Queue, Podcasting and the SQL
+  debug console. As in upstream Banshee, BPM, Library Watcher, Mini Mode, MPRIS and the
+  SQL console are disabled by default (Edit → Preferences → Extensions).
 
 Not working yet / to do:
+
+- **Extension icons:** the per-extension icon themes are not copied into `bin/` yet,
+  so some sources (Play Queue, Podcasts, Radio…) show a generic icon.
 
 - **Hardware support** (CDs, USB devices, portable players): gudev-sharp has no .NET
   version, so the GIO hardware backend is disabled and an error about it is logged at
   startup.
-- **Extensions** (Last.fm, cover art, podcasts, MPRIS, notifications, devices…): none
-  are ported yet.
+- **Remaining extensions:** notification area, multimedia keys, DAAP, remote audio,
+  UPnP and optical discs need replacements for dead libraries (notify-sharp,
+  Mono.Zeroconf, Mono.Upnp, gudev-sharp). Store, streaming and web extensions (Amazon
+  MP3, eMusic, Ubuntu One, Miro Guide, Last.fm radio, YouTube, Wikipedia…) depend on
+  services or WebKit versions that no longer exist and are not built. The
+  [community extensions](https://github.com/BansheeMediaPlayer/banshee-community-extensions) are not
+  ported yet.
 - **Banshee's test suite** has not been run under .NET yet (Hyena's has, see below).
 - **Libraries from the Mono version:** collation keys should be rebuilt once when an
   existing `banshee.db` created under Mono is opened (see *Sort keys* below).
@@ -109,7 +137,7 @@ on .NET:
 | Library | Origin | Changes |
 |---|---|---|
 | `deps/hyena` | [BansheeMediaPlayer/hyena](https://github.com/BansheeMediaPlayer/hyena) (GTK 3 branch) | SDK projects, newer GTK/ATK APIs, `NativeLibraryMap`, NUnit 3 tests |
-| `deps/dbus-sharp` | [mono/dbus-sharp](https://github.com/mono/dbus-sharp) | SDK project; removed the Remoting-based proxy; `AssemblyBuilder` instead of `AppDomain.DefineDynamicAssembly`; `libc.so.6` |
+| `deps/dbus-sharp` | [mono/dbus-sharp](https://github.com/mono/dbus-sharp) | SDK project; removed the Remoting-based proxy; `AssemblyBuilder` instead of `AppDomain.DefineDynamicAssembly`; `libc.so.6`; arrays inside variants are written as in 0.8.1 again (the post-release change from PR #58 produced invalid messages that made the bus drop the connection) |
 | `deps/dbus-sharp-glib` | [mono/dbus-sharp-glib](https://github.com/mono/dbus-sharp-glib) | SDK project; GLib library name |
 
 Hyena's tests can be run with:
